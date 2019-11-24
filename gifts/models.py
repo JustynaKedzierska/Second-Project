@@ -13,12 +13,18 @@ TYPE = [
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Institution(models.Model):
-    name =models.CharField(max_length=64)
+    name = models.CharField(max_length=64)
     description = models.TextField()
     type = models.CharField(max_length=64, choices=TYPE, default='fundacja')
     categories = models.ManyToManyField(Category)
+
+    def __str__(self):
+        return self.name
 
 
 class Donation(models.Model):
@@ -30,7 +36,9 @@ class Donation(models.Model):
     city = models.CharField(max_length=128)
     zip_code = models.CharField(max_length=5)
     pick_up_datetime = models.DateTimeField()
-    pick_up_comment = models.TextField()
+    pick_up_comment = models.TextField(blank=True)
     user = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.quantity
 
