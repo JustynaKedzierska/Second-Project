@@ -13,16 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
 
-from gifts.views import LandingPageViews, LoginView, RegisterView, AddDonationView
+
+from gifts.views import LandingPageViews, LoginView, RegisterView, AddDonationView, LogoutView, UserDetail, \
+    AddDonationConfirmationView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'^$', LandingPageViews.as_view(), name='index'),
-    url(r'^login', LoginView.as_view(), name='login'),
-    url(r'^register', RegisterView.as_view(), name='register'),
-    url(r'^donation-add', AddDonationView.as_view(), name='donation-add'),
-]
+    url(r'^login/', LoginView.as_view(), name='login'),
+    url(r'^register/', RegisterView.as_view(), name='register'),
+    url(r'^donation-add/', AddDonationView.as_view(), name='donation-add'),
+    url(r'^logout/', LogoutView.as_view(), name='logout'),
+    url(r'^user/detail/(?P<pk>(\d)+)', UserDetail.as_view(), name="user-detail"),
+    url(r'^donation-confirmation/', AddDonationConfirmationView.as_view(), name='donation-confirmation'),
+
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
