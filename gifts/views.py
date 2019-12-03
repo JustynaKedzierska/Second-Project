@@ -1,15 +1,17 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 from django.db.models import Sum, Count, FloatField
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView, FormView, ListView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 
-from gifts.forms import LoginForm, AddUserForm
-from gifts.models import Donation, Institution
+from gifts.forms import LoginForm, AddUserForm, AddDonationForm
+from gifts.models import Donation, Institution, Category
 
 
 class LandingPageViews(TemplateView):
@@ -41,8 +43,20 @@ class RegisterView(FormView):
         return super(RegisterView, self).form_valid(form)
 
 
-class AddDonationView(TemplateView):
+class AddDonationView(LoginRequiredMixin, CreateView):
     template_name = 'form.html'
+    form_class = AddDonationForm
+    success_url = reverse_lazy('form-confirmation')
+
+    def get_context_data(self, **kwargs):
+        context = super(AddDonationView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['institutions'] = Institution.objects.all()
+        return context
+
+
+class AddDonationConfirmationView(TemplateView):
+    template_name = 'form-confirmation.html'
 
 
 class LoginView(FormView):
@@ -51,9 +65,28 @@ class LoginView(FormView):
     form_class = LoginForm
     success_url = reverse_lazy('index')
 
+    def form_valid(self, form):
+        user = User.objects.get(email=form.cleaned_data['email'])
+        if user is not None:
+            user = authenticate(username=user.username,
+                                password=form.cleaned_data['password'])
+            if user is not None:
+                login(self.request, user)
+
+            return super(LoginView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        user = form.cleaned_data['email']
+        if user is not None:
+            return reverse_lazy('register')
+
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('home')
+        return redirect('index')
+
+
+class UserDetail(LoginRequiredMixin, DetailView):
+    model = User
 

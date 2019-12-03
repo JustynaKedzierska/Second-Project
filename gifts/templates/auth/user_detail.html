@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <body xmlns="http://www.w3.org/1999/html">
+   <header class="header--main-page">
+      <nav class="container container--70">
+        <ul class="nav--actions">
+             {% if user.is_authenticated %}
+                 Witaj {{ user.name }} {{ user.username }}
+                 {% if user.is_superuser %}
+          <li><a href="/admin/" class="btn btn--small btn--without-border">Panel administracyjny</a></li>
+                 {% endif %}
+          <li><a href="{% url 'logout' %}" class="btn btn--small btn--without-border">Wyloguj</a></li>
+                 {% else %}
+         <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+         <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+            {% endif %}
+        </ul>
+        <ul>
+          <li><a href="" class="btn btn--without-border active">Start</a></li>
+          <li><a href="#steps" class="btn btn--without-border">O co chodzi?</a></li>
+          <li><a href="#about-us" class="btn btn--without-border">O nas</a></li>
+          <li><a href="#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
+          <li><a href="{% url 'donation-add' %}" class="btn btn--without-border">Przekaż dary</a></li>
+          <li><a href="{% url 'index' %}#contact" class="btn btn--without-border">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="help--slides active" data-id="1">
+        <p>Dane zalogowanego uzytkownika:</p>
+
+        <ul class="help--slides-items">
+          <li>
+            <div class="col">
+              <div class="title">{{ object.first_name }} {{ object.last_name }}   email:  {{ object.email }}</div>
+              <div class="subtitle"></div>
+            </div>
+            <div class="col"><div class="text">
+                </div></div>
+          </li>
+        </ul>
+      </div>
+
+ {% endblock %}
+   {% block footer %}
+       {% include 'footer.html' %}
+       {% endblock %}
+
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+
+</html>
