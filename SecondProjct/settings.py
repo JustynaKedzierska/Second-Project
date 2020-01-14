@@ -108,10 +108,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "gifts/static"),
+]
+
+# PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+# STATICFILES_DIRS = (
+#     os.path.join(PROJECT_ROOT, '..', 'static'),
+# )
 
 try:
     from SecondProjct.local_settings import DATABASES, SECRET_KEY
 except ModuleNotFoundError:
-    print("Brak konfiguracji bazy danych w pliku local_settings.py!")
-    print("Uzupełnij dane i spróbuj ponownie!")
+    print("There's no database configuration in localsettings.py file.")
+    print("Please complete the data and try anagin.")
     exit(0)

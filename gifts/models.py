@@ -40,6 +40,5 @@ class Donation(models.Model):
     pick_up_comment = models.TextField(blank=True)
     user = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.quantity
+
 

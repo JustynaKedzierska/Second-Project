@@ -45,8 +45,13 @@ class RegisterView(FormView):
 
 class AddDonationView(LoginRequiredMixin, CreateView):
     template_name = 'form.html'
-    form_class = AddDonationForm
-    success_url = reverse_lazy('form-confirmation')
+    model = Donation
+    fields = ['quantity', 'categories', 'institution', 'address', 'phone_number', 'city', 'zip_code', 'pick_up_date',
+              'pick_up_time', 'pick_up_comment', 'user']
+    # widgets = {
+    #     'categories': forms.CheckboxSelectMultiple()
+    # }
+    success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
         context = super(AddDonationView, self).get_context_data(**kwargs)
