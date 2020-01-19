@@ -54,7 +54,6 @@ class AddDonationView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('index')
     login_url = '/login/'
 
-
     def get_context_data(self, **kwargs):
         context = super(AddDonationView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
@@ -77,7 +76,7 @@ class LoginView(FormView):
         if user is not None:
             user = authenticate(username=user.username,
                                 password=form.cleaned_data['password'])
-            if user is not None:
+            if user is None:
                 login(self.request, user)
 
             return super(LoginView, self).form_valid(form)
