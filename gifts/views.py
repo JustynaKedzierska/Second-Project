@@ -52,6 +52,8 @@ class AddDonationView(LoginRequiredMixin, CreateView):
     #     'categories': forms.CheckboxSelectMultiple()
     # }
     success_url = reverse_lazy('index')
+    login_url = '/login/'
+
 
     def get_context_data(self, **kwargs):
         context = super(AddDonationView, self).get_context_data(**kwargs)
